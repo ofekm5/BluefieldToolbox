@@ -1,0 +1,73 @@
+---
+- name: Install NVIDIA DOCA-all
+  hosts: all
+  become: yes
+  gather_facts: yes
+
+  vars:
+    doca_deb_url: "https://www.mellanox.com/downloads/DOCA/DOCA_v3.0.0/host/doca-host_3.0.0-058000-25.04-ubuntu2204_amd64.deb"
+    doca_deb_filename: "doca-host_3.0.0-058000-25.04-ubuntu2204_amd64.deb"
+    doca_deb_dest: "/tmp/{{ doca_deb_filename }}"
+    kernel_mod_path: "/lib/modules/{{ ansible_kernel }}"
+
+  tasks:
+    - name: Run DOCA uninstall script on remote host
+      script: uninstall_doca.sh
+
+    - name: Check if kernel module folder exists and is non-empty
+      find:
+        paths: "{{ kernel_mod_path }}"
+        file_type: directory
+      register: kernel_mod_dir
+
+    - name: Warn if no kernel build-related directory found
+      debug:
+        msg: "WARNING: No kernel build directory (e.g., build, kbuild) found under {{ kernel_mod_path }}"
+      when: kernel_mod_dir.matched == 0
+
+    - name: Download DOCA host .deb
+      get_url:
+        url: "{{ doca_deb_url }}"
+        dest: "{{ doca_deb_dest }}"
+        mode: '0644'
+
+    - name: Install DOCA host package
+      apt:
+        deb: "{{ doca_deb_dest }}"
+
+    - name: Update APT cache
+      apt:
+        update_cache: yes
+
+    - name: Install doca-all non-interactively
+      apt:
+        name: doca-all
+        state: present
+      environment:
+        DEBIAN_FRONTEND: noninteractive
+      async: 1800  # allow up to 30 min
+      poll: 0      # fire-and-forget (continue to next task)
+      register: doca_async
+
+    - name: Wait for doca-all install to finish
+      async_status:
+        jid: "{{ doca_async.ansible_job_id }}"
+      register: result
+      until: result.finished
+      retries: 100
+      delay: 15
+
+    - name: Install mlnx-fw-updater
+      apt:
+        name: mlnx-fw-updater
+        state: present
+
+      #sudo apt install rshim-user-space
+
+    - name: Restart openibd service
+      service:
+        name: openibd
+        state: restarted
+
+    - name: Restart mst tool
+      shell: mst restart

@@ -1,0 +1,31 @@
+---
+- name: Flash BlueField DPU with BFB image
+  hosts: all
+  become: yes
+  tasks:
+
+    - name: Check if rshim0 device is present
+      stat:
+        path: /dev/rshim0
+      register: rshim_device
+
+    - name: Fail if RShim device not found
+      fail:
+        msg: "RShim device /dev/rshim0 not found. Make sure the DPU is connected and rshim is installed."
+      when: not rshim_device.stat.exists
+
+    - name: Transfer BFB image to host
+      copy:
+        src: ./bf-bundle-3.0.0-135_25.04_ubuntu-22.04_prod.bfb
+        dest: /tmp/bf-bundle.bfb
+        mode: '0644'
+
+    - name: Flash BlueField DPU with bfb-install
+      shell: >
+        bfb-install --bfb /tmp/bf-bundle.bfb --rshim rshim0
+      register: flash_output
+      ignore_errors: no
+
+    - name: Print flashing output
+      debug:
+        var: flash_output.stdout_lines
