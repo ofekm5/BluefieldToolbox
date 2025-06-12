@@ -6,3 +6,4 @@
 *.fatbin
 *.ini
 bfb-setup/bf-bundle-3.0.0-135_25.04_ubuntu-22.04_prod.bfb
+bfb/bf-bundle-3.0.0-135_25.04_ubuntu-22.04_prod.bfb
