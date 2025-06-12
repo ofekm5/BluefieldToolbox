@@ -18,9 +18,9 @@ This guide explains how to set up Visual Studio Code to connect to a remote Linu
 ## ✅ Step 2: Configure SSH Access
 
 1. Ensure your local system can SSH to your remote host:
-   ```bash
-   ssh username@remote-vm-ip
-````
+  ```bash
+  ssh username@remote-vm-ip
+  ```
 
 2. In VSCode:
 
