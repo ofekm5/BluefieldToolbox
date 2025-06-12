@@ -49,7 +49,7 @@ This guide explains how to set up Visual Studio Code to connect to a remote Linu
 
 ## ✅ Step 4: Project Folder and Workspace
 
-* Clone your DOCA app repo or copy the code into the VM
+* Clone your DOCA app repo with setup_git_and_clone.sh
 * Open the folder from VSCode remote
 
 ---
