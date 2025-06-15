@@ -22,7 +22,7 @@ A practical set of tools and automation scripts for managing and configuring NVI
 
 ```text
 .
-├── ansible/
+├── playbooks-and-scripts/
 │   ├── flash_bfb.yml
 │   ├── install_doca_all.yml
 │   ├── uninstall_doca.sh
