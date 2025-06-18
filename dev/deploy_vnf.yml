@@ -1,0 +1,36 @@
+# ansible-playbook -i inventory/hosts.ini deploy_vnf.yml --ask-vault-pass
+
+---
+- name: Build and deploy DOCA VNF container
+  hosts: dpu
+  become: true
+  vars_files:
+    - vault.yml
+
+  vars:
+    repo_url: "https://{{ git_username }}:{{ git_password }}@github.com/youruser/yourrepo.git"
+    project_dir: "/home/bluefield/my_project"
+    image_tag: "vnf_simple_fwd:latest"
+
+  tasks:
+
+    - name: Clone or update repo
+      ansible.builtin.git:
+        repo: "{{ repo_url }}"
+        dest: "{{ project_dir }}"
+        version: main
+        force: true
+        update: yes
+
+    - name: Build custom DOCA VNF Docker image
+      ansible.builtin.shell: |
+        docker build -t {{ image_tag }} .
+      args:
+        chdir: "{{ project_dir }}"
+
+    - name: Run VNF container (non-interactive)
+      ansible.builtin.shell: |
+        docker run --rm \
+          -v /dev/hugepages:/dev/hugepages \
+          --privileged --net=host \
+          {{ image_tag }}

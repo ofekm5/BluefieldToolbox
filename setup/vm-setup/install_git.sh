@@ -32,8 +32,3 @@ read -p "[Press ENTER after you've added the key to GitHub]"
 # === Step 5: Test connection to GitHub ===
 echo "[+] Testing GitHub SSH connection..."
 ssh -T git@github.com
-
-# === Step 6: Clone your repository ===
-read -p "Enter your GitHub SSH repo URL (e.g., git@github.com:ofekm5/BluefieldToolbox.git): " repo_url
-git clone "$repo_url"
-echo "[+] Repository cloned!"
