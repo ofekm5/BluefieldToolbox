@@ -14,10 +14,10 @@ sudo systemctl enable docker
 sudo systemctl start docker
 
 # === Step 2: (Optional) Docker Hub login ===
-read -p "Is your Docker image private? [y/N]: " is_private
-if [[ "$is_private" =~ ^[Yy]$ ]]; then
-  read -p "Docker Hub username: " docker_user
-  read -s -p "Docker Hub password: " docker_pass
-  echo
-  echo "$docker_pass" | docker login --username "$docker_user" --password-stdin
-fi
+# read -p "Is your Docker image private? [y/N]: " is_private
+# if [[ "$is_private" =~ ^[Yy]$ ]]; then
+#   read -p "Docker Hub username: " docker_user
+#   read -s -p "Docker Hub password: " docker_pass
+#   echo
+#   echo "$docker_pass" | docker login --username "$docker_user" --password-stdin
+# fi
