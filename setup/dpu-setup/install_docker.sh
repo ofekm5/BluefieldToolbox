@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # Instructions:
-# 1. [from the host] transfer this script to the DPU: scp install_docker.sh bluefield@<DPU_IP>:~
+# 1. [from the host] transfer this script to the DPU: scp install_docker.sh <DPU_USER>@<DPU_IP>:<remote/destination/path>
+
 # 2. [from the DPU environment] run this script on the DPU:
 # chmod +x ~/install_docker.sh
 # ./install_docker.sh
